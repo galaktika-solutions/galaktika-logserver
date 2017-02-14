@@ -34,9 +34,9 @@ services:
     build: kibana/
     volumes:
       - ./kibana/config/:/etc/kibana/
+      - ./certificate.crt/:/certificate.crt
+      - ./certifiacte.key/:/certificate.key
     ports:
       - "5601:5601"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
