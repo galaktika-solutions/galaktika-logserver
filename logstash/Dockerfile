@@ -1,4 +1,4 @@
-FROM logstash:5
+FROM logstash:5.3
 
 # Add your logstash plugins setup here
 RUN logstash-plugin update
