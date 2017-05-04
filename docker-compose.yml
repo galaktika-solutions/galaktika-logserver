@@ -44,18 +44,5 @@ services:
       - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
-    # logging:
-    #   driver: none
-
-
-  # nginx:
-  #   build: nginx/
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - "./nginx/nginx.conf:/tmp/nginx.conf"
-  #     - "./nginx/entrypoint_utils.sh:/entrypoint_utils.sh"
-  #     - "./nginx/entrypoint.sh:/entrypoint.sh"
-  #     - ./certificate.crt/:/tmp/certificate.crt
-  #     - ./certificate.key/:/tmp/certificate.key
+    logging:
+      driver: none
