@@ -30,7 +30,7 @@ services:
       - ./logstash/config:/etc/logstash/conf.d
       - ./certificate.crt/:/certificate.crt
       - ./certificate.key/:/certificate.key
-      - ./vertisrootCA.crt/:/ca.crt
+      - ./ca.crt/:/ca.crt
     ports:
       - "5000:5000"
     depends_on:
