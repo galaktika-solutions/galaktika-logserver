@@ -28,6 +28,9 @@ services:
     command: -f /etc/logstash/conf.d/
     volumes:
       - ./logstash/config:/etc/logstash/conf.d
+      - ./certificate.crt/:/certificate.crt
+      - ./certificate.key/:/certificate.key
+      - ./vertisrootCA.crt/:/ca.crt
     ports:
       - "5000:5000"
     depends_on:
@@ -44,5 +47,3 @@ services:
       - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
