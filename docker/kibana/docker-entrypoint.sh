@@ -144,8 +144,8 @@ proc_file() {
 
 # set certificate owner
 
-proc_file -c kibana:kibana:600 /tmp/certificate.key /certificate.key
-proc_file -c kibana:kibana:600 /tmp/certificate.crt /certificate.crt
+proc_file -c kibana:kibana:600 /.env-files/certificate.key /certificate.key
+proc_file -c kibana:kibana:600 /.env-files/certificate.crt /certificate.crt
 
 # Add kibana as command if needed
 if [[ "$1" == -* ]]; then

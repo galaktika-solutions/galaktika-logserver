@@ -1,18 +1,21 @@
-version: '2'
+version: '3'
 
 volumes:
   data:
     driver: local
-  test-log:
-    driver: local
-
 
 services:
+    # src:                                                          # prod only
+    #   image: ${COMPOSE_PROJECT_NAME}-src                          # prod only
+    #   volumes:                                                    # prod only
+    #     - "/src"                                                  # prod only
+    #   command: ["true"]                                           # prod only
+
   elasticsearch:
-    build: elasticsearch/
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+    build:                                                        # dev only
+        context: ./docker/elasticsearch                           # dev only
+        dockerfile: Dockerfile                                    # dev only
+    image: ${COMPOSE_PROJECT_NAME}-elasticsearch
     environment:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
       pack.security.enabled: "false"
@@ -21,35 +24,38 @@ services:
       xpack.watcher.enabled: "false"
     volumes:
       - "data:/usr/share/elasticsearch/data"
-    logging:
-      driver: none
+    # logging:                                                    # prod only
+      # driver: none                                              # prod only
 
 
   logstash:
-    build: logstash/
+    build:                                                        # dev only
+        context: ./docker/logstash                                # dev only
+        dockerfile: Dockerfile                                    # dev only
+    image: ${COMPOSE_PROJECT_NAME}-logstash
     command: -f /etc/logstash/conf.d/
     volumes:
-      - ./logstash/config:/etc/logstash/conf.d
-      - ./certificate.crt/:/certificate.crt
-      - ./certificate.key/:/certificate.key
-      - ./ca.crt/:/ca.crt
+      - ./docker/logstash/config:/etc/logstash/conf.d             # dev only
+      - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
+    # logging:                                                    # prod only
+      # driver: none                                              # prod only
 
 
   kibana:
-    build: kibana/
+    build:                                                        # dev only
+        context: ./docker/kibana                                  # dev only
+        dockerfile: Dockerfile                                    # dev only
+    image: ${COMPOSE_PROJECT_NAME}-kibana
     volumes:
-      - ./kibana/config/:/etc/kibana/
-      - ./certificate.crt/:/tmp/certificate.crt
-      - ./certificate.key/:/tmp/certificate.key
+      - ./docker/kibana/config/:/etc/kibana/                             # dev only
+      - "./.env-files:/.env-files"
     ports:
       - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
+    # logging:                                                    # prod only
+      # driver: none                                              # prod only
