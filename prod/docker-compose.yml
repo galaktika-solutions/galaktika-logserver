@@ -5,11 +5,11 @@ volumes:
     driver: local
 
 services:
-    src:
-      image: ${COMPOSE_PROJECT_NAME}-src
-      volumes:
-        - "/src"
-      command: ["true"]
+  src:
+    image: ${COMPOSE_PROJECT_NAME}-src
+    volumes:
+      - "/src"
+    command: ["true"]
 
   elasticsearch:
     image: ${COMPOSE_PROJECT_NAME}-elasticsearch
