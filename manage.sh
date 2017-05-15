@@ -86,13 +86,13 @@ push() {
       docker image build \
         -t "$local_name" \
         -f "$project_root/docker/$service/Dockerfile" \
-        "$project_root/docker/"
+        "$project_root/docker/$service/"
     else
       docker image build \
         -t "$local_name" \
         -f "$project_root/docker/$service/Dockerfile" \
         --cache-from "$latest" \
-        "$project_root/docker/"
+        "$project_root/docker/$service/"
     fi
 
     print "... tagging $local_name -> $latest"
