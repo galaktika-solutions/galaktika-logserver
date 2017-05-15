@@ -21,8 +21,6 @@ services:
       xpack.watcher.enabled: "false"
     volumes:
       - "data:/usr/share/elasticsearch/data"
-    logging:
-      driver: none
 
 
   logstash:
@@ -34,8 +32,6 @@ services:
       - "5000:5000"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
 
 
   kibana:
@@ -46,5 +42,3 @@ services:
       - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
-    logging:
-      driver: none
