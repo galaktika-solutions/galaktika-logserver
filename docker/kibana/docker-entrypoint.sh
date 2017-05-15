@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# echo error messages to STDERR
+echoerr() { echo "$@" >&2; }
+
 proc_file() {
   local substitutes=()
 
