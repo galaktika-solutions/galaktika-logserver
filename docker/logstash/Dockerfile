@@ -8,3 +8,5 @@ RUN logstash-plugin install logstash-filter-grok
 RUN logstash-plugin install logstash-output-email
 RUN logstash-plugin install logstash-filter-date
 RUN logstash-plugin update logstash-filter-date
+
+COPY config/logstash.conf /etc/logstash/conf.d/logstash.conf

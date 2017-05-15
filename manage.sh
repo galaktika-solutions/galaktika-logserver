@@ -144,6 +144,7 @@ pull() {
   file_env REGISTRY_URL
   file_env COMPOSE_PROJECT_NAME
   file_env IMAGENAME_PREFIX
+  file_env IMAGES
   second_run=''
   if [ -f "$project_root/x" ]; then
     second_run='true'
