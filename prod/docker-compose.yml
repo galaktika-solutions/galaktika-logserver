@@ -1,0 +1,50 @@
+version: '3'
+
+volumes:
+  data:
+    driver: local
+
+services:
+    src:
+      image: ${COMPOSE_PROJECT_NAME}-src
+      volumes:
+        - "/src"
+      command: ["true"]
+
+  elasticsearch:
+    image: ${COMPOSE_PROJECT_NAME}-elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      pack.security.enabled: "false"
+      xpack.monitoring.enabled: "false"
+      xpack.graph.enabled: "false"
+      xpack.watcher.enabled: "false"
+    volumes:
+      - "data:/usr/share/elasticsearch/data"
+    logging:
+      driver: none
+
+
+  logstash:
+    image: ${COMPOSE_PROJECT_NAME}-logstash
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - "./.env-files:/.env-files"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - elasticsearch
+    logging:
+      driver: none
+
+
+  kibana:
+    image: ${COMPOSE_PROJECT_NAME}-kibana
+    volumes:
+      - "./.env-files:/.env-files"
+    ports:
+      - "127.0.0.1:5601:5601"
+    depends_on:
+      - elasticsearch
+    logging:
+      driver: none

@@ -51,6 +51,7 @@ push() {
   file_env REGISTRY_URL
   file_env COMPOSE_PROJECT_NAME
   file_env IMAGENAME_PREFIX
+  file_env IMAGES
   imgname_prefix="$1"
   if [ -z "$imgname_prefix" ]; then
     print_red "Image name prefix was not given."
