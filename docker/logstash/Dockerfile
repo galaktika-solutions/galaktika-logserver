@@ -10,3 +10,4 @@ RUN logstash-plugin install logstash-filter-date
 RUN logstash-plugin update logstash-filter-date
 
 COPY config/logstash.conf /etc/logstash/conf.d/logstash.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
