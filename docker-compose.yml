@@ -82,7 +82,7 @@ services:
       - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
       - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
       - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
-      - "./docker/backup/start-cron:/usr/sbin/start-cron"          # dev only
-      - "./docker/backup/docker-entrypoint.sh:/docker-entrypoint.sh"          # dev only
-      - "./test.sh:/test.sh"                                       # dev only
-    command: start-cron --user myvertis "\6 \20 \* \* \* bash /backup.sh >> /var/log/cron.log 2>&1"
+      - "./docker/backup/start-cron:/usr/sbin/start-cron"            # dev only
+      - "./docker/backup/backup.sh:/backup.sh"            # dev only
+      - "./docker/backup/docker-entrypoint.sh:/docker-entrypoint.sh" # dev only
+    command: start-cron --user myvertis "${CRON}"
