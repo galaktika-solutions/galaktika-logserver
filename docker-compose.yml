@@ -24,6 +24,8 @@ services:
       xpack.watcher.enabled: "false"
     volumes:
       - "data:/usr/share/elasticsearch/data"
+    ports:
+      - "127.0.0.1:9200:9200"
 
 
   logstash:
@@ -53,5 +55,17 @@ services:
     ports:
       # - "127.0.0.1:5601:5601"                                   # prod only
       - "127.0.0.1:5601:5601"                                     # dev only
+    depends_on:
+      - elasticsearch
+
+  curator:
+    build:                                                        # dev only
+        context: ./docker/curator                                  # dev only
+        dockerfile: Dockerfile                                    # dev only
+    image: ${COMPOSE_PROJECT_NAME}-curator
+    volumes:
+      - ./docker/curator/docker-entrypoint.sh/:/docker-entrypoint.sh  # dev only
+      - ./docker/curator/config/:/config
+    #   - "./.env-files:/.env-files"
     depends_on:
       - elasticsearch
