@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 volumes:
   data:
@@ -65,7 +65,23 @@ services:
     image: ${COMPOSE_PROJECT_NAME}-curator
     volumes:
       - ./docker/curator/docker-entrypoint.sh/:/docker-entrypoint.sh  # dev only
-      - ./docker/curator/config/:/config
-    #   - "./.env-files:/.env-files"
+      - ./docker/curator/config/:/config                              # dev only
+      - "./.env-files:/.env-files"
     depends_on:
       - elasticsearch
+
+  backup:
+    build:                                                        # dev only
+        context: ./docker/backup                                  # dev only
+        dockerfile: Dockerfile                                    # dev only
+    image: ${COMPOSE_PROJECT_NAME}-backup
+    volumes_from:
+      - elasticsearch
+    env_file: .env
+    volumes:
+      - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
+      - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
+      - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
+      - "./docker/backup/start-cron:/usr/sbin/start-cron"          # dev only
+      - "./test.sh:/test.sh"                                       # dev only
+    command: start-cron --user myvertis "\* \* \* \* \* bash /backup.sh >> /var/log/cron.log 2>&1"

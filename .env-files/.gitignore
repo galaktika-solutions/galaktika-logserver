@@ -1,6 +1,5 @@
-*.py[oc]
-__pycache__
-
-*.crt
+id_rsa
 *.key
-*.secret
+*.crt
+*.pub
+known_hosts
