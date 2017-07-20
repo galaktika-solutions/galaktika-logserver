@@ -25,5 +25,6 @@ RUN mkdir /home/myvertis/.ssh
 RUN chown myvertis:myvertis /home/myvertis/.ssh
 
 COPY start-cron /usr/sbin
+COPY backup.sh /
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["./docker-entrypoint.sh"]
