@@ -17,7 +17,7 @@ services:
         dockerfile: Dockerfile                                    # dev only
     image: ${COMPOSE_PROJECT_NAME}-elasticsearch
     environment:
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      ES_JAVA_OPTS: "-Xms20g -Xmx20g"
       pack.security.enabled: "false"
       xpack.monitoring.enabled: "false"
       xpack.graph.enabled: "false"
@@ -40,21 +40,6 @@ services:
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
-    depends_on:
-      - elasticsearch
-
-
-  kibana:
-    build:                                                        # dev only
-        context: ./docker/kibana                                  # dev only
-        dockerfile: Dockerfile                                    # dev only
-    image: ${COMPOSE_PROJECT_NAME}-kibana
-    volumes:
-      - ./docker/kibana/config/:/etc/kibana/                      # dev only
-      - "./.env-files:/.env-files"
-    ports:
-      # - "127.0.0.1:5601:5601"                                   # prod only
-      - "127.0.0.1:5601:5601"                                     # dev only
     depends_on:
       - elasticsearch
 
