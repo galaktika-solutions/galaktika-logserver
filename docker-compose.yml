@@ -17,7 +17,7 @@ services:
         dockerfile: Dockerfile                                    # dev only
     image: ${COMPOSE_PROJECT_NAME}-elasticsearch
     environment:
-      ES_JAVA_OPTS: "-Xms20g -Xmx20g"
+      ES_JAVA_OPTS: "-Xms4g -Xmx4g"
       pack.security.enabled: "false"
       xpack.monitoring.enabled: "false"
       xpack.graph.enabled: "false"
