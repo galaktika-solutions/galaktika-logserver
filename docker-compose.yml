@@ -62,12 +62,12 @@ services:
     build:                                                        # dev only
         context: ./docker/cron                                  # dev only
         dockerfile: Dockerfile                                    # dev only
-    image: ${COMPOSE_PROJECT_NAME}-curator
+    image: ${COMPOSE_PROJECT_NAME}-cron
     volumes_from:
       - elasticsearch
     env_file: .env
     volumes:
-        - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh  # dev only
+        # - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh  # dev only
         - ./docker/cron/curator_config/:/curator_config              # dev only
         - ./docker/cron/start-cron/:/start-cron                      # dev only
         - "./.env-files:/.env-files"
@@ -78,7 +78,7 @@ services:
     build:                                                             # dev only
         context: ./docker/cron                                          # dev only
         dockerfile: Dockerfile                                          # dev only
-    image: ${COMPOSE_PROJECT_NAME}-backup
+    image: ${COMPOSE_PROJECT_NAME}-cron
     volumes_from:
       - elasticsearch
     env_file: .env
