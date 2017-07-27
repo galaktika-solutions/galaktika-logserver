@@ -38,3 +38,21 @@ actions:
       direction: older
       unit: days
       unit_count: 0
+    3:
+      action: delete_snapshots
+      description: >-
+        Delete snapshots from the selected repository older than 45 days
+        (based on creation_date), for 'curator-' prefixed snapshots.
+      options:
+        repository:
+        disable_action: True
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: curator-
+        exclude:
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: 0
