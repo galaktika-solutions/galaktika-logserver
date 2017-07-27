@@ -3,7 +3,7 @@ set -e
 
   ## Try not to use UPPER CASE variables to avoid conflicts
   ## with the default environmental variable names.
-
+chmod 777 /mount/backups/my_backup
 site="elasticsearch:9200/_snapshot/my_backup";
 function response() {
   response=$(curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X PUT $site -d \
