@@ -37,7 +37,7 @@ services:
       xpack.watcher.enabled: "false"
     volumes:
       - "data:/usr/share/elasticsearch/data"
-      - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"  # dev only
       - "backup:/mount/backups/my_backup"
     ports:
       - "127.0.0.1:9200:9200"
@@ -75,9 +75,9 @@ services:
     command: start-cron --user curator "${CURATOR_CRON}"
 
   backup:
-    build:
-        context: ./docker/cron
-        dockerfile: Dockerfile
+    build:                                                             # dev only
+        context: ./docker/cron                                          # dev only
+        dockerfile: Dockerfile                                          # dev only
     image: ${COMPOSE_PROJECT_NAME}-backup
     volumes_from:
       - elasticsearch
@@ -87,9 +87,9 @@ services:
       - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
       - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
       - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
-      - "./docker/cron/start-cron:/usr/sbin/start-cron"
-      - "./docker/cron/backup.sh:/backup.sh"
-      - "./docker/cron/backup-docker-entrypoint.sh:/backup-docker-entrypoint.sh"
+      - "./docker/cron/start-cron:/usr/sbin/start-cron"                     # dev only
+      - "./docker/cron/backup.sh:/backup.sh"                                 # dev only
+      - "./docker/cron/backup-docker-entrypoint.sh:/backup-docker-entrypoint.sh"     # dev only
     entrypoint: ./backup-docker-entrypoint.sh
     command: start-cron --user myvertis "${BACKUP_CRON}"
     depends_on:
