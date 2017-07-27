@@ -27,7 +27,7 @@ RUN set -ex \
     /etc/pam.d/cron
 
 RUN groupadd -r curator && useradd -r -g curator curator
-RUN groupadd -r myvertis && useradd -r -g myvertis myvertis
+RUN groupadd -g 1000 myvertis && useradd -u 1000 -m -g 1000 myvertis
 RUN pip install --upgrade pip
 RUN pip install elasticsearch-curator==5.1.1
 
