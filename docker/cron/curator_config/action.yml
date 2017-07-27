@@ -25,7 +25,7 @@ actions:
       pattern in 'name'.  Use all other options as assigned
     options:
       repository: my_backup
-      name: 'curator-%Y-%m-%d-%-%H-%M"'
+      name: 'curator-%Y-%m-%d-%H-%M"'
       ignore_unavailable: True
       wait_for_completion: True
       disable_action: False
