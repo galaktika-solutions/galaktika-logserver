@@ -4,8 +4,14 @@ RUN set -ex \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive \
         apt-get install -y --no-install-recommends \
+          curl \
           rsync \
-          openssh-server
+          openssh-server \
+          python-pip \
+          python-dev \
+          build-essential \
+          python-setuptools
+
 
 RUN set -ex \
     && apt-get clean && apt-get update \
@@ -20,11 +26,13 @@ RUN set -ex \
     's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' \
     /etc/pam.d/cron
 
-RUN groupadd -g 1000 myvertis && useradd -u 1000 -m -g 1000 myvertis
-RUN mkdir /home/myvertis/.ssh
-RUN chown myvertis:myvertis /home/myvertis/.ssh
+RUN groupadd -r curator && useradd -r -g curator curator
+RUN groupadd -r myvertis && useradd -r -g myvertis myvertis
+RUN pip install --upgrade pip
+RUN pip install elasticsearch-curator==5.1.1
 
+COPY curator_config /curator_config
 COPY start-cron /usr/sbin
+COPY curator-docker-entrypoint.sh /curator-docker-entrypoint.sh
+COPY backup-docker-entrypoint.sh /backup-docker-entrypoint.sh
 COPY backup.sh /
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["./docker-entrypoint.sh"]
