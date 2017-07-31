@@ -29,12 +29,6 @@ services:
         context: ./docker/elasticsearch                           # dev only
         dockerfile: Dockerfile                                    # dev only
     image: ${COMPOSE_PROJECT_NAME}-elasticsearch
-    environment:
-      ES_JAVA_OPTS: "-Xms4g -Xmx4g"
-      pack.security.enabled: "false"
-      xpack.monitoring.enabled: "false"
-      xpack.graph.enabled: "false"
-      xpack.watcher.enabled: "false"
     volumes:
       - "data:/usr/share/elasticsearch/data"
       - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"  # dev only
@@ -67,7 +61,7 @@ services:
       - elasticsearch
     env_file: .env
     volumes:
-        # - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh  # dev only
+        - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh  # dev only
         - ./docker/cron/curator_config/:/curator_config              # dev only
         - ./docker/cron/start-cron/:/start-cron                      # dev only
         - "./.env-files:/.env-files"

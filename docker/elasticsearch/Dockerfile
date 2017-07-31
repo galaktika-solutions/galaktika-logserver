@@ -1,6 +1,7 @@
-FROM elasticsearch:5.3
+FROM elasticsearch:5.5
 
-COPY elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
+COPY elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+RUN chown root:elasticsearch /etc/elasticsearch/elasticsearch.yml
+RUN mkdir -p /mount/backups/my_backup
+RUN chmod -R 777 /mount
 ENV ES_JAVA_OPTS="-Des.path.conf=/etc/elasticsearch"
-
-CMD ["-E", "network.host=0.0.0.0", "-E", "discovery.zen.minimum_master_nodes=1"]
