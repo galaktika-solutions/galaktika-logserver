@@ -46,11 +46,11 @@ services:
     volumes:
       - ./docker/logstash/config:/etc/logstash/conf.d             # dev only
       - ./docker/logstash/docker-entrypoint.sh:/docker-entrypoint.sh # dev only
+      - /var/log/:/var/log/
+      - "./docker/logstash/patterns/:/opt/patterns/"
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
-    depends_on:
-      - elasticsearch
 
   curator:
     build:                                                        # dev only
