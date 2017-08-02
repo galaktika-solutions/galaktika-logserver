@@ -47,7 +47,7 @@ services:
       - ./docker/logstash/config:/etc/logstash/conf.d             # dev only
       - ./docker/logstash/docker-entrypoint.sh:/docker-entrypoint.sh # dev only
       - /var/log/:/var/log/
-      - "./docker/logstash/patterns/:/opt/patterns/"
+      - "./docker/logstash/patterns/:/opt/patterns/"              # dev only
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"

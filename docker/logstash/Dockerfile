@@ -5,5 +5,6 @@ RUN logstash-plugin install logstash-input-beats
 RUN logstash-plugin install logstash-filter-json
 RUN logstash-plugin install logstash-filter-grok
 
+COPY patterns /opt/patterns
 COPY config/logstash.conf /etc/logstash/conf.d/logstash.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
