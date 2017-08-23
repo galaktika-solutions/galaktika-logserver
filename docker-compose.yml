@@ -53,6 +53,7 @@ services:
     ports:
       - "5000:5000"
       - "514:514/udp"
+      - "1024:1024/udp"
 
   curator:
     build:                                                        # dev only
