@@ -54,6 +54,7 @@ services:
       - "5000:5000"
       - "514:514/udp"
       - "1025:1025/udp"
+      - "1026:1026/udp"
 
   curator:
     build:                                                        # dev only
