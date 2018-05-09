@@ -40,7 +40,7 @@ if [ "$1" != 'bash' ] || [ "$1" != 'restore' ]; then
     echo 'elasticsearch UP'
   else
     echo 'elasticsearch DOWN wait 30 sec and try again'
-    sleep 30
+    sleep 60
     response
     if [ "$response" != '' ]; then
       echo 'elasticsearch UP'

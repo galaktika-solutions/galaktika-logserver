@@ -1,0 +1,39 @@
+version: '2.2'
+
+services:
+  elasticsearch:
+    build:
+        context: ./docker/elasticsearch
+        dockerfile: Dockerfile
+    volumes:
+      - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+
+
+  logstash:
+    build:
+        context: ./docker/logstash
+        dockerfile: Dockerfile
+    volumes:
+      - ./docker/logstash/config:/etc/logstash/conf.d
+      - ./docker/logstash/docker-entrypoint.sh:/docker-entrypoint.sh
+      - "./docker/logstash/patterns/:/opt/patterns/"
+
+  kibana:
+    build:
+        context: ./docker/kibana
+        dockerfile: Dockerfile
+
+  # curator:
+  #   build:
+  #       context: ./docker/cron
+  #       dockerfile: Dockerfile
+  #   volumes:
+  #       - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh
+  #       - ./docker/cron/curator_config/:/curator_config
+  #       - ./docker/cron/start-cron/:/start-cron
+  #
+  # backup:
+  #   volumes:
+  #     - "./docker/cron/start-cron:/usr/sbin/start-cron"
+  #     - "./docker/cron/backup.sh:/backup.sh"
+  #     - "./docker/cron/backup-docker-entrypoint.sh:/backup-docker-entrypoint.sh"

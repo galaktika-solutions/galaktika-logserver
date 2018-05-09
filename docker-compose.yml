@@ -1,14 +1,4 @@
-version: '2'
-
-networks:
-  default:
-    ipam:
-      driver: default
-      config:
-       - subnet: 10.5.0.0/16
-         gateway: 10.5.0.1
-         aux_addresses:
-          elasticsearch: 10.5.0.5
+version: '2.2'
 
 volumes:
   data:
@@ -18,77 +8,58 @@ volumes:
 
 
 services:
-  # src:                                                          # prod only
-  #   image: ${COMPOSE_PROJECT_NAME}-src                          # prod only
-  #   volumes:                                                    # prod only
-  #     - "/src"                                                  # prod only
-  #   command: ["true"]                                           # prod only
-
   elasticsearch:
-    build:                                                        # dev only
-        context: ./docker/elasticsearch                           # dev only
-        dockerfile: Dockerfile                                    # dev only
-    image: ${COMPOSE_PROJECT_NAME}-elasticsearch
+    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-elasticsearch:${REGISTRY_TAG}
     volumes:
       - "data:/usr/share/elasticsearch/data"
-      - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"  # dev only
       - "backup:/mount/backups/my_backup"
     ports:
       - "127.0.0.1:9200:9200"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
 
 
   logstash:
-    build:                                                        # dev only
-        context: ./docker/logstash                                # dev only
-        dockerfile: Dockerfile                                    # dev only
-    image: ${COMPOSE_PROJECT_NAME}-logstash
+    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-logstash:${REGISTRY_TAG}
     command: -f /etc/logstash/conf.d/
     volumes:
-      - ./docker/logstash/config:/etc/logstash/conf.d             # dev only
-      - ./docker/logstash/docker-entrypoint.sh:/docker-entrypoint.sh # dev only
-      - /var/log/:/var/log/
-      - "./log/:/cisco/"
-      - "./docker/logstash/patterns/:/opt/patterns/"              # dev only
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
-      - "514:514/udp"
-      - "1025:1025/udp"
-      - "1026:1026/udp"
+      # - "514:514/udp"
+      # - "1025:1025/udp"
+      # - "1026:1026/udp"
 
-  curator:
-    build:                                                        # dev only
-        context: ./docker/cron                                  # dev only
-        dockerfile: Dockerfile                                    # dev only
-    image: ${COMPOSE_PROJECT_NAME}-cron
-    volumes_from:
-      - elasticsearch
-    env_file: .env
-    volumes:
-        - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh  # dev only
-        - ./docker/cron/curator_config/:/curator_config              # dev only
-        - ./docker/cron/start-cron/:/start-cron                      # dev only
-        - "./.env-files:/.env-files"
-    entrypoint: ./curator-docker-entrypoint.sh
-    command: start-cron --user curator "${CURATOR_CRON}"
-
-  backup:
-    build:                                                             # dev only
-        context: ./docker/cron                                          # dev only
-        dockerfile: Dockerfile                                          # dev only
-    image: ${COMPOSE_PROJECT_NAME}-cron
-    volumes_from:
-      - elasticsearch
-    env_file: .env
-    volumes:
-      - "./.env:/.env"
-      - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
-      - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
-      - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
-      - "./docker/cron/start-cron:/usr/sbin/start-cron"                     # dev only
-      - "./docker/cron/backup.sh:/backup.sh"                                 # dev only
-      - "./docker/cron/backup-docker-entrypoint.sh:/backup-docker-entrypoint.sh"     # dev only
-    entrypoint: ./backup-docker-entrypoint.sh
-    command: start-cron --user myvertis "${BACKUP_CRON}"
+  kibana:
+    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-kibana:${REGISTRY_TAG}
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5601:5601"
+
+
+  # curator:
+  #   image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-cron:${REGISTRY_TAG}
+  #   volumes_from:
+  #     - elasticsearch
+  #   env_file: .env
+  #   volumes:
+  #       - "./.env-files:/.env-files"
+  #   entrypoint: ./curator-docker-entrypoint.sh
+  #   command: start-cron --user curator "${CURATOR_CRON}"
+  #
+  # backup:
+  #   image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-cron:${REGISTRY_TAG}
+  #   volumes_from:
+  #     - elasticsearch
+  #   env_file: .env
+  #   volumes:
+  #     - "./.env:/.env"
+  #     - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
+  #     - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
+  #     - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
+  #   entrypoint: ./backup-docker-entrypoint.sh
+  #   command: start-cron --user myvertis "${BACKUP_CRON}"
+  #   depends_on:
+  #     - elasticsearch
