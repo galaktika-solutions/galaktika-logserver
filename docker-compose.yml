@@ -15,8 +15,8 @@ services:
       - "backup:/mount/backups/my_backup"
     ports:
       - "127.0.0.1:9200:9200"
-    healthcheck:
-      test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
+    # healthcheck:
+    #   test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
 
 
   logstash:
@@ -32,9 +32,9 @@ services:
 
   kibana:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-kibana:${REGISTRY_TAG}
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
     ports:
       - "5601:5601"
 
