@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.3'
 
 volumes:
   data:
@@ -15,8 +15,6 @@ services:
       - "backup:/mount/backups/my_backup"
     ports:
       - "127.0.0.1:9200:9200"
-    # healthcheck:
-    #   test: ['CMD', 'curl', '-f', '-u', 'elastic:changeme', 'http://localhost:9200']
 
 
   logstash:
@@ -26,17 +24,14 @@ services:
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
-      # - "514:514/udp"
-      # - "1025:1025/udp"
-      # - "1026:1026/udp"
+      - "514:5140/udp"
+      - "1025:1025/udp"
+      - "1026:1026/udp"
 
   kibana:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-kibana:${REGISTRY_TAG}
-    # depends_on:
-    #   elasticsearch:
-    #     condition: service_healthy
     ports:
-      - "5601:5601"
+      - "127.0.0.1:5601:5601"
 
 
   # curator:

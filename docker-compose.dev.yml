@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.3'
 
 services:
   elasticsearch:
@@ -15,14 +15,12 @@ services:
         dockerfile: Dockerfile
     volumes:
       - ./docker/logstash/config:/etc/logstash/conf.d
-      - ./docker/logstash/docker-entrypoint.sh:/docker-entrypoint.sh
-      - "./docker/logstash/patterns/:/opt/patterns/"
 
   kibana:
     build:
         context: ./docker/kibana
         dockerfile: Dockerfile
-
+  #
   # curator:
   #   build:
   #       context: ./docker/cron
