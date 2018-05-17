@@ -31,9 +31,10 @@ RUN groupadd -g 1000 linux_backup && useradd -u 1000 -m -g 1000 linux_backup
 RUN pip install --upgrade pip
 RUN pip install elasticsearch-curator==5.4.0
 
-COPY curator_config /curator_config
-COPY start-cron /usr/sbin
-COPY entrypoint.sh /entrypoint.sh
-COPY backup.sh /
+COPY curator/curator_config /curator_config
+COPY curator/start-cron /usr/sbin
+COPY curator/entrypoint.sh /entrypoint.sh
+COPY curator/backup.sh /
+COPY utils.sh /
 
 ENTRYPOINT ["./entrypoint.sh"]

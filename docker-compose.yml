@@ -3,16 +3,14 @@ version: '3.3'
 volumes:
   data:
     driver: local
-  backup:
-    driver: local
 
 
 services:
   elasticsearch:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-elasticsearch:${REGISTRY_TAG}
     volumes:
-      - "data:/usr/share/elasticsearch/data"
-      - "backup:/mount/backups/my_backup"
+      - data:/usr/share/elasticsearch/data
+      - ./backup:/mount/backups/my_backup
     ports:
       - "9200:9200"
 
@@ -40,20 +38,17 @@ services:
     env_file: .env
     volumes:
         - "./.env-files:/.env-files"
-        - "backup:/mount/backups/my_backup"
-    command: start-cron --user root "${CURATOR_CRON}"
+        - ./backup:/mount/backups/my_backup
+    command: curator
 
-  # backup:
-  #   image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
-  #   depends_on: ["elasticsearch"]
-  #   env_file: .env
-  #   volumes:
-  #     - "backup:/mount/backups/my_backup"
-  #     - "./.env:/.env"
-  #     - "./.env-files/id_rsa:/home/myvertis/.ssh/id_rsa"
-  #     - "./.env-files/id_rsa.pub:/home/myvertis/.ssh/id_rsa.pub"
-  #     - "./.env-files/known_hosts:/home/myvertis/.ssh/known_hosts"
-  #   entrypoint: ./entrypoint.sh backup
-  #   command: start-cron --user linux_backup "${BACKUP_CRON}"
-  #   depends_on:
-  #     - elasticsearch
+  backup:
+    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
+    depends_on: ["elasticsearch"]
+    env_file: .env
+    volumes:
+      - ./backup:/mount/backups/my_backup
+      - "./.env:/.env"
+      - "./.env-files/:/.env-files"
+    command: backup
+    depends_on:
+      - elasticsearch

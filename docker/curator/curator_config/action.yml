@@ -11,16 +11,7 @@ actions:
     filters:
     - filtertype: pattern
       kind: prefix
-      value: logstash-
-    - filtertype: pattern
-      kind: prefix
-      value: metricbeat-
-    - filtertype: pattern
-      kind: prefix
-      value: filebeat-
-    - filtertype: pattern
-      kind: prefix
-      value: winlogbeat-
+      value: '%Y.%m.%d'
     - filtertype: age
       source: name
       direction: older
@@ -37,17 +28,16 @@ actions:
       name: 'curator-%Y-%m-%d-%H-%M'
       ignore_unavailable: True
       wait_for_completion: True
+      ignore_empty_list: True
       disable_action: False
     filters:
     - filtertype: pattern
       kind: prefix
-      value: metricbeat-
+      value: '^filebeat-|^winlogbeat-|^logstash-|.kibana'
     - filtertype: pattern
       kind: prefix
-      value: filebeat-
-    - filtertype: pattern
-      kind: prefix
-      value: winlogbeat-
+      value: metric-
+      exclude: True
     - filtertype: age
       source: creation_date
       direction: older
@@ -60,6 +50,7 @@ actions:
       (based on creation_date), for 'curator-' prefixed snapshots.
     options:
       repository: my_backup
+      ignore_empty_list: True
       disable_action: False
     filters:
     - filtertype: pattern

@@ -3,35 +3,37 @@ version: '3.3'
 services:
   elasticsearch:
     build:
-        context: ./docker/elasticsearch
-        dockerfile: Dockerfile
+        context: ./docker
+        dockerfile: /elasticsearch/Dockerfile
     volumes:
       - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 
 
   logstash:
     build:
-        context: ./docker/logstash
-        dockerfile: Dockerfile
+        context: ./docker
+        dockerfile: /logstash/Dockerfile
     volumes:
       - ./docker/logstash/config:/etc/logstash/conf.d
 
   kibana:
     build:
-        context: ./docker/kibana
-        dockerfile: Dockerfile
+        context: ./docker
+        dockerfile: /kibana/Dockerfile
 
   curator:
     build:
-        context: ./docker/curator
-        dockerfile: Dockerfile
+        context: ./docker
+        dockerfile: /curator/Dockerfile
     volumes:
         - ./docker/curator/entrypoint.sh:/entrypoint.sh
         - ./docker/curator/curator_config:/curator_config
         - ./docker/curator/start-cron:/start-cron
+        - ./docker/utils.sh:/utils.sh
 
-  # backup:
-  #   volumes:
-  #     - "./docker/curator/start-cron:/usr/sbin/start-cron"
-  #     - "./docker/curator/backup.sh:/backup.sh"
-  #     - "./docker/curator/entrypoint.sh:/entrypoint.sh"
+  backup:
+    volumes:
+      - "./docker/curator/start-cron:/usr/sbin/start-cron"
+      - "./docker/curator/backup.sh:/backup.sh"
+      - "./docker/utils.sh:/utils.sh"
+      - "./docker/curator/entrypoint.sh:/entrypoint.sh"

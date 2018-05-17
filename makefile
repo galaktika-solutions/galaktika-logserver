@@ -1,12 +1,6 @@
 SHELL=/bin/bash
-
 timestamp := $(shell date +"%Y-%m-%d-%H-%M")
-env := $(shell cat .env | grep "MV2_ENV")
-usr := $(shell id -u):$(shell id -g)
 
-################################################################################
-# self documenting makefile
-################################################################################
 .DEFAULT_GOAL := help
 .PHONY: help
 ## print available targets
@@ -21,51 +15,44 @@ help:
 	@echo
 
 ################################################################################
-.PHONY: build
+.DEFAULT_GOAL := push
+.PHONY: push
+## push docker-registry images
+push: bold = $(shell tput bold; tput setaf 3)
+push: reset = $(shell tput sgr0)
 
-## build all docker images (use DEV)
-build:
-	 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+push:
+	git checkout master
+	git pull
+	REGISTRY_TAG=${timestamp} docker-compose -f docker-compose.yml -f docker-compose.dev.yml build;
+	docker-compose push
+	git tag --create $(timestamp)
+	git push origin --tagsa
+	@echo '$(bold)${timestamp}$(reset)'
+
+################################################################################
+.PHONY: pull
+## pull docker-registry images
+pull:
+	docker-compose pull
+
+################################################################################
+.PHONY: pull-up-d
+## pull and run docker-registry images
+pull-up-d: pull
+	docker-compose up -d
 
 ################################################################################
 .PHONY: restore
 
 restore:
+	docker-compose run --rm -v "/backup:/mount/backups/my_backup" curator /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/restore_action.yml
 
 
 ################################################################################
 .PHONY: backup
 
 backup:
+	docker-compose run --rm -v "/backup:/mount/backups/my_backup" curator /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml
 
-################################################################################
-.PHONY: push_prod
-
-push_prod:
-
-
-################################################################################
-.PHONY: push_test
-
-push_test:
-	# REGISTRY_PREFIX=test docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-	# REGISTRY_PREFIX=test REGISTRY_TAG=$(timestamp) docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-	# docker-compose run --rm django test_keepdb
-	# docker-compose run --rm django build_test
-	# REGISTRY_PREFIX=test docker-compose push
-	# REGISTRY_PREFIX=test REGISTRY_TAG=$(timestamp) docker-compose push
-	# git tag --create test-$(timestamp)
-	# git push origin --tags
-	# docker-compose down
-
-
-################################################################################
-.PHONY: pull
-
-pull:
-
-################################################################################
-.PHONY: pull-up-d
-
-pull-up-d: pull
-	docker-compose up -d
+.

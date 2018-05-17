@@ -1,9 +1,21 @@
 #!/bin/bash
 set -e
 
+set -e
+
+. /utils.sh
+
+if [ "$DEV_MODE" == 'false' ]; then
+  check_file "root:root:600" "/.env"
+fi
+
+
 if [ "$1" == 'backup' ]; then
-  chmod 600 /home/linux_backup/.ssh/id_rsa
-  chown -R linux_backup:linux_backup /home/linux_backup/.ssh
+  mkdir -p /home/linux_backup/.ssh
+  proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa /home/linux_backup/.ssh/id_rsa
+  proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa.pub /home/linux_backup/.ssh/id_rsa.pub
+  proc_file -c linux_backup:linux_backup:400 /.env-files/known_hosts /home/linux_backup/.ssh/known_hosts
+  start-cron --user linux_backup "${BACKUP_CRON}"
 fi
 
   ## Try not to use UPPER CASE variables to avoid conflicts
@@ -43,7 +55,7 @@ if [ "$1" == 'restore' ]; then
   exit
 fi
 
-if [ "$1" == 'start' ]; then
+if [ "$1" == 'curator' ]; then
   /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml
   exit
 fi
