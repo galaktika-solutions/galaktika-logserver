@@ -12,6 +12,15 @@ actions:
     - filtertype: pattern
       kind: prefix
       value: logstash-
+    - filtertype: pattern
+      kind: prefix
+      value: metricbeat-
+    - filtertype: pattern
+      kind: prefix
+      value: filebeat-
+    - filtertype: pattern
+      kind: prefix
+      value: winlogbeat-
     - filtertype: age
       source: name
       direction: older
@@ -32,7 +41,13 @@ actions:
     filters:
     - filtertype: pattern
       kind: prefix
-      value: logstash-
+      value: metricbeat-
+    - filtertype: pattern
+      kind: prefix
+      value: filebeat-
+    - filtertype: pattern
+      kind: prefix
+      value: winlogbeat-
     - filtertype: age
       source: creation_date
       direction: older

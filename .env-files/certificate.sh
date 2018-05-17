@@ -1,31 +1,38 @@
 #!/bin/bash
+
+###########################################
+# Run this from the .env.files directory! #
+#################################3#########
+
 set -e
 
-CN="lcoalhost"
-SAN="DNS:localhost"
-KEY="$CN.key"
-CSR="$CN.csr"
-CRT="$CN.crt"
-CACRT="rootCA.crt"
-CAKEY="rootCA.key"
+common_name=localhost
 
-# rootCA create
-openssl genrsa -out $CAKEY 2048
-openssl req -x509 -new -nodes -key $CAKEY -sha256 -days 1024 -out $CACRT
+san="DNS:$common_name, \
+     IP:127.0.0.1, \
+     IP:192.168.5.68"
 
-# certificate create
-openssl genrsa -out $KEY 2048
+rm -rf ./*.{crt,key,csr}
 
-openssl req -new -sha256 -subj "/commonName=$CN" \
-         -key $KEY -reqexts SAN -out $CSR \
-         -config <(cat /etc/ssl/openssl.cnf \
-                   <(printf "[SAN]\nsubjectAltName=%s" "$SAN"))
+# generate CA private key
+openssl genrsa -out ca.key 2048
 
-openssl x509 -req -in $CSR -CA $CACRT -CAkey $CAKEY \
-         -out $CRT -days 500 -sha256 -extensions SAN \
-         -CAcreateserial -CAserial "$CACRT.srl" \
-         -extfile <(cat /etc/ssl/openssl.cnf \
-                    <(printf "[SAN]\nsubjectAltName=%s" "$SAN"))
+# self signed CA certificate
+openssl req -x509 -new -nodes -subj "/commonName=$common_name-ca" \
+        -key ca.key -sha256 -days 1024 -out ca.crt
 
-rm "$CSR"
-rm "$CAKEY"
+# generate private key
+openssl genrsa -out certificate.key 2048
+
+# certificate request
+openssl req -new -sha256 -subj "/commonName=$common_name" \
+        -key certificate.key -reqexts SAN -out certificate.csr \
+        -config <(cat /etc/ssl/openssl.cnf \
+                  <(printf "[SAN]\nsubjectAltName=%s" "$san"))
+
+# sign the certificate with CA
+openssl x509 -req -in certificate.csr -CA ca.crt -CAkey ca.key \
+        -out certificate.crt -days 500 -sha256 -extensions SAN \
+        -CAcreateserial -CAserial ca.srl \
+        -extfile <(cat /etc/ssl/openssl.cnf \
+                   <(printf "[SAN]\nsubjectAltName=%s" "$san"))

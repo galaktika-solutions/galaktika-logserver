@@ -20,18 +20,18 @@ services:
     build:
         context: ./docker/kibana
         dockerfile: Dockerfile
-  #
-  # curator:
-  #   build:
-  #       context: ./docker/cron
-  #       dockerfile: Dockerfile
-  #   volumes:
-  #       - ./docker/cron/curator-docker-entrypoint.sh/:/curator-docker-entrypoint.sh
-  #       - ./docker/cron/curator_config/:/curator_config
-  #       - ./docker/cron/start-cron/:/start-cron
-  #
+
+  curator:
+    build:
+        context: ./docker/curator
+        dockerfile: Dockerfile
+    volumes:
+        - ./docker/curator/entrypoint.sh:/entrypoint.sh
+        - ./docker/curator/curator_config:/curator_config
+        - ./docker/curator/start-cron:/start-cron
+
   # backup:
   #   volumes:
-  #     - "./docker/cron/start-cron:/usr/sbin/start-cron"
-  #     - "./docker/cron/backup.sh:/backup.sh"
-  #     - "./docker/cron/backup-docker-entrypoint.sh:/backup-docker-entrypoint.sh"
+  #     - "./docker/curator/start-cron:/usr/sbin/start-cron"
+  #     - "./docker/curator/backup.sh:/backup.sh"
+  #     - "./docker/curator/entrypoint.sh:/entrypoint.sh"

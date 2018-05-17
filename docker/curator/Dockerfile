@@ -27,12 +27,13 @@ RUN set -ex \
     /etc/pam.d/cron
 
 RUN groupadd -r curator && useradd -r -g curator curator
-RUN groupadd -g 1000 myvertis && useradd -u 1000 -m -g 1000 myvertis
+RUN groupadd -g 1000 linux_backup && useradd -u 1000 -m -g 1000 linux_backup
 RUN pip install --upgrade pip
-RUN pip install elasticsearch-curator==5.1.1
+RUN pip install elasticsearch-curator==5.4.0
 
 COPY curator_config /curator_config
 COPY start-cron /usr/sbin
-COPY curator-docker-entrypoint.sh /curator-docker-entrypoint.sh
-COPY backup-docker-entrypoint.sh /backup-docker-entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 COPY backup.sh /
+
+ENTRYPOINT ["./entrypoint.sh"]
