@@ -36,3 +36,9 @@ openssl x509 -req -in certificate.csr -CA ca.crt -CAkey ca.key \
         -CAcreateserial -CAserial ca.srl \
         -extfile <(cat /etc/ssl/openssl.cnf \
                    <(printf "[SAN]\nsubjectAltName=%s" "$san"))
+
+
+openssl pkcs8 -in certificate.key -topk8 -nocrypt -out certificate.pkcs8.key
+rm certificate.key
+mv certificate.pkcs8.key certificate.key
+cat certificate.key certificate.crt >> certificate.pem

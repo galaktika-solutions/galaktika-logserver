@@ -4,6 +4,13 @@ volumes:
   data:
     driver: local
 
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: ${NETWORK_RANGE}
+
 
 services:
   elasticsearch:
@@ -12,8 +19,8 @@ services:
       - data:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
     ports:
-      - "9200:9200"
-
+      - 443:443
+      - "127.0.0.1:9200:9200"
 
   logstash:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-logstash:${REGISTRY_TAG}
@@ -22,7 +29,7 @@ services:
       - "./.env-files:/.env-files"
     ports:
       - "5000:5000"
-      # - "514:5140/udp"
+      - "514:5140/udp"
       - "1025:1025/udp"
       - "1026:1026/udp"
 
@@ -36,6 +43,8 @@ services:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
     depends_on: ["elasticsearch"]
     env_file: .env
+    environment:
+      CURATOR_CRON : '\10 \20 \* \* \* /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml >> /var/log/cron.log 2>&1'
     volumes:
         - "./.env-files:/.env-files"
         - ./backup:/mount/backups/my_backup
@@ -45,10 +54,17 @@ services:
     image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
     depends_on: ["elasticsearch"]
     env_file: .env
+    environment:
+      BACKUP_CRON : '\40 \20 \* \* \* /bin/bash /backup.sh >> /var/log/cron.log 2>&1'
     volumes:
       - ./backup:/mount/backups/my_backup
-      - "./.env:/.env"
       - "./.env-files/:/.env-files"
     command: backup
-    depends_on:
-      - elasticsearch
+
+  stunnel:
+    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-stunnel:${REGISTRY_TAG}
+    env_file: .env
+    volumes:
+      - ./.env-files/:/.env-files
+    ports:
+      - "9201:9200"

@@ -33,7 +33,16 @@ services:
 
   backup:
     volumes:
-      - "./docker/curator/start-cron:/usr/sbin/start-cron"
-      - "./docker/curator/backup.sh:/backup.sh"
-      - "./docker/utils.sh:/utils.sh"
-      - "./docker/curator/entrypoint.sh:/entrypoint.sh"
+      - ./docker/curator/start-cron:/usr/sbin/start-cron
+      - ./docker/curator/backup.sh:/backup.sh
+      - ./docker/utils.sh:/utils.sh
+      - ./docker/curator/entrypoint.sh:/entrypoint.sh
+
+  stunnel:
+    build:
+        context: ./docker
+        dockerfile: /stunnel/Dockerfile
+    volumes:
+      - ./docker/stunnel/stunnel.conf:/etc/stunnel/stunnel.conf
+      - ./docker/utils.sh:/utils.sh
+      - ./docker/stunnel/entrypoint.sh:/entrypoint.sh
