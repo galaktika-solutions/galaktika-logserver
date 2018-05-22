@@ -19,7 +19,6 @@ services:
       - data:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
     ports:
-      - 443:443
       - "127.0.0.1:9200:9200"
 
   logstash:

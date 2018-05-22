@@ -54,5 +54,3 @@ restore:
 
 backup:
 	docker-compose run --rm -v "/backup:/mount/backups/my_backup" curator /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml
-
-.
