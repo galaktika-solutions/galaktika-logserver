@@ -1,10 +1,10 @@
-version: '3.3'
+version: '3.4'
 
 services:
   elasticsearch:
     build:
       context: ./docker
-      dockerfile: /elasticsearch/Dockerfile
+      dockerfile: elasticsearch/Dockerfile
     volumes:
       - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 
@@ -12,21 +12,21 @@ services:
   logstash:
     build:
       context: ./docker
-      dockerfile: /logstash/Dockerfile
+      dockerfile: logstash/Dockerfile
     volumes:
       - ./docker/logstash/config:/etc/logstash/conf.d
 
   kibana:
     build:
       context: ./docker
-      dockerfile: /kibana/Dockerfile
+      dockerfile: kibana/Dockerfile
     volumes:
         - ./docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
 
   curator:
     build:
       context: ./docker
-      dockerfile: /curator/Dockerfile
+      dockerfile: curator/Dockerfile
     volumes:
         - ./docker/curator/entrypoint.sh:/entrypoint.sh
         - ./docker/curator/curator_config:/curator_config
@@ -43,7 +43,7 @@ services:
   stunnel:
     build:
       context: ./docker
-      dockerfile: /stunnel/Dockerfile
+      dockerfile: stunnel/Dockerfile
     volumes:
       - ./docker/stunnel/stunnel.conf:/etc/stunnel/stunnel.conf
       - ./docker/utils.sh:/utils.sh

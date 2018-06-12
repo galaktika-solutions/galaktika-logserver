@@ -1,8 +1,8 @@
-version: '3.3'
+version: '3.4'
 
 volumes:
   data:
-    driver: local
+    name: ${ELASTIC_PORT}
 
 networks:
   default:
@@ -14,32 +14,38 @@ networks:
 
 services:
   elasticsearch:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-elasticsearch:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-elasticsearch:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch-${ELASTIC_PORT}
     volumes:
       - data:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
+    restart: always
     ports:
-      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:${ELASTIC_PORT}:9200"
 
   logstash:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-logstash:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-logstash:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-logstash-${ELASTIC_PORT}
+    depends_on: ["elasticsearch"]
     command: -f /etc/logstash/conf.d/
     volumes:
       - "./.env-files:/.env-files"
+    restart: always
     ports:
-      - "5000:5000"
-      - "514:5140/udp"
-      - "1025:1025/udp"
-      - "1026:1026/udp"
+      - "${SWITCH_PORT}:5140/udp"
+      - "${QS_FIREWALL_PORT}:1026"
+      - "${VERTIS_FIREWALL_PORT}:1025"
 
   kibana:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-kibana:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-kibana:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-kibana-${ELASTIC_PORT}
+    restart: always
     ports:
-      - "5601:5601"
-
+      - "127.0.0.1:${KIBANA_PORT}:5601"
 
   curator:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-curator:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-curator-${ELASTIC_PORT}
     depends_on: ["elasticsearch"]
     env_file: .env
     environment:
@@ -47,10 +53,12 @@ services:
     volumes:
         - "./.env-files:/.env-files"
         - ./backup:/mount/backups/my_backup
+    restart: on-failure
     command: curator
 
   backup:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-curator:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-curator:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-backup-${ELASTIC_PORT}
     depends_on: ["elasticsearch"]
     env_file: .env
     environment:
@@ -58,12 +66,15 @@ services:
     volumes:
       - ./backup:/mount/backups/my_backup
       - "./.env-files/:/.env-files"
+    restart: on-failure
     command: backup
 
   stunnel:
-    image: ${REGISTRY_URL}/${REGISTRY_PREFIX}/${COMPOSE_PROJECT_NAME}-stunnel:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-stunnel:${REGISTRY_TAG}
+    container_name: ${COMPOSE_PROJECT_NAME}-stunnel-${ELASTIC_PORT}
     env_file: .env
     volumes:
       - ./.env-files/:/.env-files
+    restart: always
     ports:
-      - "9201:9200"
+      - "${STUNNEL_PORT}:9200"

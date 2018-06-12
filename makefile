@@ -22,12 +22,11 @@ push: bold = $(shell tput bold; tput setaf 3)
 push: reset = $(shell tput sgr0)
 
 push:
-	git checkout master
 	git pull
 	REGISTRY_TAG=${timestamp} docker-compose -f docker-compose.yml -f docker-compose.dev.yml build;
-	docker-compose push
+	REGISTRY_TAG=${timestamp} docker-compose push
 	git tag --create $(timestamp)
-	git push origin --tagsa
+	git push origin --tags
 	@echo '$(bold)${timestamp}$(reset)'
 
 ################################################################################
@@ -44,13 +43,18 @@ pull-up-d: pull
 
 ################################################################################
 .PHONY: restore
-
+## restore the indicies (backup folder)
 restore:
-	docker-compose run --rm -v "/backup:/mount/backups/my_backup" curator /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/restore_action.yml
-
+	docker-compose run --rm -v "$(CURDIR)/backup:/mount/backups/my_backup" curator restore
 
 ################################################################################
 .PHONY: backup
-
+## backup the indicies (backup folder)
 backup:
-	docker-compose run --rm -v "/backup:/mount/backups/my_backup" curator /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml
+	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" curator manual_backup
+
+################################################################################
+.PHONY: scp
+## backup the indicies (backup folder) and scp to the backup destiniton
+scp:
+	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" -v "$(CURDIR)/.env-files/:/.env-files" curator backup scp

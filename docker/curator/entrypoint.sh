@@ -6,18 +6,9 @@ set -e
 chmod 777 /mount/backups/my_backup
 
 if [ "$DEV_MODE" == 'false' ]; then
-  check_file "root:root:600" "/.env"
-fi
-
-if [ "$1" == 'backup' ]; then
-  if [ "$SSH_BACKUP_SERVICE" == 'true' ]; then
-    mkdir -p /home/linux_backup/.ssh
-    proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa /home/linux_backup/.ssh/id_rsa
-    proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa.pub /home/linux_backup/.ssh/id_rsa.pub
-    proc_file -c linux_backup:linux_backup:400 /.env-files/known_hosts /home/linux_backup/.ssh/known_hosts
-    start-cron --user linux_backup "${BACKUP_CRON}"
-  fi
-  exit 0
+  check_file "root:root:600" "/.env-files/id_rsa"
+  check_file "root:root:600" "/.env-files/certificate.key"
+  check_file "root:root:600" "/.env-files/certificate.pem"
 fi
 
 site="elasticsearch:9200/_snapshot/my_backup";
@@ -41,6 +32,29 @@ function response() {
   fi
 
 }
+
+if [ "$1" == 'backup' ]; then
+  mkdir -p /home/linux_backup/.ssh
+  proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa /home/linux_backup/.ssh/id_rsa
+  proc_file -c linux_backup:linux_backup:400 /.env-files/id_rsa.pub /home/linux_backup/.ssh/id_rsa.pub
+  proc_file -c linux_backup:linux_backup:400 /.env-files/known_hosts /home/linux_backup/.ssh/known_hosts
+  if [ "$2" == 'scp' ]; then
+    exec su linux_backup -c ./backup.sh
+    exit 0
+  fi
+  if [ "$SSH_BACKUP_SERVICE" == 'true' ]; then
+    start-cron --user linux_backup "${BACKUP_CRON}"
+  fi
+  exit 0
+fi
+
+
+if [ "$1" == 'manual_backup' ]; then
+  response
+  /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml
+  exit
+fi
+
 
 if [ "$1" == 'restore' ]; then
   response
