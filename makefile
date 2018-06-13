@@ -58,3 +58,9 @@ backup:
 ## backup the indicies (backup folder) and scp to the backup destiniton
 scp:
 	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" -v "$(CURDIR)/.env-files/:/.env-files" curator backup scp
+
+################################################################################
+.PHONY: certificate
+## pull docker-registry images
+certificate:
+	cd .env-files && ./certificate.sh
