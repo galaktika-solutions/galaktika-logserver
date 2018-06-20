@@ -19,6 +19,8 @@ services:
     volumes:
       - data:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
+    environment:
+      - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
     restart: always
     ports:
       - "127.0.0.1:${ELASTIC_PORT}:9200"
