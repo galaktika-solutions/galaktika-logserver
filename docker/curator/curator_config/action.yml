@@ -8,7 +8,8 @@ actions:
     options:
       ignore_empty_list: True
       disable_action: False
-   - filtertype: pattern
+    filters:
+    - filtertype: pattern
       kind: prefix
       value: '^winlogbeat-'
     - filtertype: age
@@ -27,7 +28,7 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-   - filtertype: pattern
+    - filtertype: pattern
       kind: prefix
       value: '^filebeat-'
     - filtertype: age
@@ -45,7 +46,7 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-   - filtertype: pattern
+    - filtertype: pattern
       kind: prefix
       value: '^logstash-'
     - filtertype: age
