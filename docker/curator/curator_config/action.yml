@@ -91,7 +91,7 @@ actions:
     filters:
     - filtertype: pattern
       kind: prefix
-      value: curator-
+      value: '^curator-'
       exclude:
     - filtertype: age
       source: creation_date
