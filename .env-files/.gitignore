@@ -3,4 +3,6 @@ id_rsa
 *.crt
 *.pub
 *.pem
+*.srl
+*.csr
 known_hosts

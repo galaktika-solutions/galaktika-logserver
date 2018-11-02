@@ -29,7 +29,7 @@ RUN set -ex \
 RUN groupadd -r curator && useradd -r -g curator curator
 RUN groupadd -g 1000 linux_backup && useradd -u 1000 -m -g 1000 linux_backup
 RUN pip install --upgrade pip
-RUN pip install elasticsearch-curator==5.4.0
+RUN pip install elasticsearch-curator==5.5.4
 
 COPY curator/curator_config /curator_config
 COPY curator/start-cron /usr/sbin

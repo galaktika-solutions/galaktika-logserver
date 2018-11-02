@@ -5,6 +5,8 @@ services:
     build:
       context: ./docker
       dockerfile: elasticsearch/Dockerfile
+    environment:
+      - "ES_JAVA_OPTS=-Xms1G -Xmx1G"
     volumes:
       - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
 
