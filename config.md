@@ -17,6 +17,7 @@ EMAIL_FROM=dev@vertis.com
 EMAIL_RECIPIENT=dev@vertis.com
 
 CURATOR_SERVICE=True
+os.environ.get('SECOND_LOGSERVER_RUN_ON_START') == 'True',
 
 NETWORK_RANGE=10.5.9.0/24
 
