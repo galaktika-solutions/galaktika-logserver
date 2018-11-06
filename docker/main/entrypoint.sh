@@ -26,14 +26,14 @@ function response() {
 
 if [ "$1" == 'manual_backup' ]; then
   response
-  /usr/local/bin/curator --config /conf/curator.yml /conf/action.yml
+  curator --config /conf/curator.yml /conf/action.yml
   exit
 fi
 
 
 if [ "$1" == 'restore' ]; then
   response
-  /usr/local/bin/curator --config /conf/curator.yml /conf/restore_action.yml
+  curator --config /conf/curator.yml /conf/restore_action.yml
   exit
 fi
 
