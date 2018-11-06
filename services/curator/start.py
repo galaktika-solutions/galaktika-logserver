@@ -20,7 +20,7 @@ send = MailSender(
     os.environ.get('EMAIL_RECIPIENT'),
     timeout=10,
     use_ssl=False,
-    use_tls=True,
+    use_tls=False,
     username=None,
     password=None
 ).send_mail

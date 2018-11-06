@@ -46,6 +46,7 @@ RUN pip install --no-cache-dir \
   periodtask==0.7.0
 
 COPY conf /conf
+COPY conf/stunnel.conf /etc/stunnel/stunnel.conf
 COPY docker/main/entrypoint.sh /entrypoint.sh
 COPY services/ /services
 COPY docker/utils.sh /
