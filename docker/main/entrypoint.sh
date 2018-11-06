@@ -26,7 +26,7 @@ function response() {
 
 if [ "$1" == 'manual_backup' ]; then
   response
-  curator --config /conf/curator.yml /conf/action.yml
+  bash /services/curator/curator.sh
   exit
 fi
 

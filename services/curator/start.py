@@ -33,7 +33,7 @@ tasks = TaskList(
         periods='0 10 20 * * * Europe/Budapest',
         mail_skipped=send,
         mail_failure=send,
-        run_on_start=os.environ.get('CURATOR_RUN_ON_START') == 'True',
+        run_on_start=False,
         wait_timeout=5,
         send_mail_func=send,
         stop_signal=signal.SIGTERM,
