@@ -27,26 +27,16 @@ services:
 
   curator:
     build:
-      context: ./docker
-      dockerfile: curator/Dockerfile
+      context: .
+      dockerfile: docker/main/Dockerfile
     volumes:
-        - ./docker/curator/entrypoint.sh:/entrypoint.sh
-        - ./docker/curator/curator_config:/curator_config
-        - ./docker/curator/start-cron:/start-cron
+        - ./services:/services
+        - ./docker/main/entrypoint.sh:/entrypoint.sh
+        - ./conf:/conf
         - ./docker/utils.sh:/utils.sh
 
-  backup:
-    volumes:
-      - ./docker/curator/start-cron:/usr/sbin/start-cron
-      - ./docker/curator/backup.sh:/backup.sh
-      - ./docker/utils.sh:/utils.sh
-      - ./docker/curator/entrypoint.sh:/entrypoint.sh
-
   stunnel:
-    build:
-      context: ./docker
-      dockerfile: stunnel/Dockerfile
     volumes:
-      - ./docker/stunnel/stunnel.conf:/etc/stunnel/stunnel.conf
+      - ./conf/stunnel.conf:/etc/stunnel/stunnel.conf
       - ./docker/utils.sh:/utils.sh
-      - ./docker/stunnel/entrypoint.sh:/entrypoint.sh
+      - ./docker/main/entrypoint.sh:/entrypoint.sh

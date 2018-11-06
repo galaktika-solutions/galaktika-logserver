@@ -46,37 +46,23 @@ services:
       - "127.0.0.1:${KIBANA_PORT}:5601"
 
   curator:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-curator:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-main:${REGISTRY_TAG}
     container_name: ${COMPOSE_PROJECT_NAME}-curator-${ELASTIC_PORT}
     depends_on: ["elasticsearch"]
     env_file: .env
-    environment:
-      CURATOR_CRON : '\10 \20 \* \* \* /usr/local/bin/curator --config /curator_config/curator.yml /curator_config/action.yml >> /var/log/cron.log 2>&1'
     volumes:
         - "./.env-files:/.env-files"
         - ./backup:/mount/backups/my_backup
     restart: on-failure
     command: curator
 
-  backup:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-curator:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-backup-${ELASTIC_PORT}
-    depends_on: ["elasticsearch"]
-    env_file: .env
-    environment:
-      BACKUP_CRON : '\40 \20 \* \* \* /bin/bash /backup.sh >> /var/log/cron.log 2>&1'
-    volumes:
-      - ./backup:/mount/backups/my_backup
-      - "./.env-files/:/.env-files"
-    restart: on-failure
-    command: backup
-
   stunnel:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-stunnel:${REGISTRY_TAG}
+    image: ${REGISTRY_URL}/${REGISTRY_NAME}-main:${REGISTRY_TAG}
     container_name: ${COMPOSE_PROJECT_NAME}-stunnel-${ELASTIC_PORT}
     env_file: .env
     volumes:
       - ./.env-files/:/.env-files
     restart: always
+    command: stunnel
     ports:
       - "${STUNNEL_PORT}:9200"
