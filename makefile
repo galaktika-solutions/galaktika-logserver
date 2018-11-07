@@ -28,39 +28,3 @@ push:
 	git tag --create $(timestamp)
 	git push origin --tags
 	@echo '$(bold)${timestamp}$(reset)'
-
-################################################################################
-.PHONY: pull
-## pull docker-registry images
-pull:
-	docker-compose pull
-
-################################################################################
-.PHONY: pull-up-d
-## pull and run docker-registry images
-pull-up-d: pull
-	docker-compose up -d
-
-################################################################################
-.PHONY: restore
-## restore the indicies (backup folder)
-restore:
-	docker-compose run --rm -v "$(CURDIR)/backup:/mount/backups/my_backup" curator restore
-
-################################################################################
-.PHONY: backup
-## backup the indicies (backup folder)
-backup:
-	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" curator manual_backup
-
-################################################################################
-.PHONY: scp
-## backup the indicies (backup folder) and scp to the backup destiniton
-scp:
-	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" -v "$(CURDIR)/.env-files/:/.env-files" curator backup scp
-
-################################################################################
-.PHONY: certificate
-## pull docker-registry images
-certificate:
-	cd .env-files && ./certificate.sh
