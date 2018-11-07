@@ -3,7 +3,7 @@ set -e
 
 . /utils.sh
 
-site="elasticsearch:$ELASTIC_PORT/_snapshot/my_backup";
+site="elasticsearch:9200/_snapshot/my_backup";
 function response() {
   chmod 777 /mount/backups/my_backup
   response=$(curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X PUT $site -d \
