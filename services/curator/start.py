@@ -30,7 +30,7 @@ tasks = TaskList(
     Task(
         name='Curator Service Backup Service',
         command=('bash', '/services/curator/curator.sh'),
-        periods='0 10 20 * * * Europe/Budapest',
+        periods='0 55 17 * * * Europe/Budapest',
         mail_skipped=send,
         mail_failure=send,
         run_on_start=False,
