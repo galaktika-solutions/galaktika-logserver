@@ -28,3 +28,22 @@ push:
 	git tag --create $(timestamp)
 	git push origin --tags
 	@echo '$(bold)${timestamp}$(reset)'
+
+
+################################################################################
+.PHONY: restore
+## restore the indicies (backup folder)
+restore:
+	docker-compose run --rm -v "$(CURDIR)/backup:/mount/backups/my_backup" curator restore
+
+################################################################################
+.PHONY: backup
+## backup the indicies (backup folder)
+backup:
+	docker-compose run --rm  -v "$(CURDIR)/backup:/mount/backups/my_backup" curator manual_backup
+
+################################################################################
+.PHONY: certificate
+## pull docker-registry images
+certificate:
+	cd .env-files && ./certificate.sh
