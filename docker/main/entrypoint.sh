@@ -5,7 +5,6 @@ set -e
 
 site="elasticsearch:9200/_snapshot/my_backup";
 function response() {
-  chmod 777 /mount/backups/my_backup
   response=$(curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X PUT $site -d \
   '{
     "type": "fs",
@@ -33,7 +32,9 @@ fi
 
 if [ "$1" == 'restore' ]; then
   response
+  chown -R 1000 /mount/backups/my_backup
   curator --config /conf/curator.yml /conf/restore_action.yml
+  chown -R "$BACKUP_UID:$BACKUP_UID" /mount/backups/my_backup
   exit
 fi
 

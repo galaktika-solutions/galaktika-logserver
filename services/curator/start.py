@@ -29,7 +29,7 @@ send = MailSender(
 tasks = TaskList(
     Task(
         name='Curator Service Backup Service',
-        command=('bash', '/services/curator/curator.sh'),
+        command=('./services/curator/curator.sh',),
         periods='0 55 17 * * * Europe/Budapest',
         mail_skipped=send,
         mail_failure=send,
