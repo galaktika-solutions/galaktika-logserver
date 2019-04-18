@@ -27,7 +27,7 @@ ENV LANG en_US.utf8
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir \
-  elasticsearch-curator==5.5.4 \
+  elasticsearch-curator==5.6.0 \
   periodtask==0.7.0
 
 COPY conf /conf
