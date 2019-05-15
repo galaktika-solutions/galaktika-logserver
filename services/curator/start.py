@@ -30,7 +30,9 @@ tasks = TaskList(
     Task(
         name='Curator Service Backup Service',
         command=('./services/curator/curator.sh',),
-        periods='0 55 17 * * * Europe/Budapest',
+        periods=os.environ.get(
+            'CURATOR_CRON', '0 55 17 * * * Europe/Budapest'
+        ),
         mail_skipped=send,
         mail_failure=send,
         run_on_start=False,
