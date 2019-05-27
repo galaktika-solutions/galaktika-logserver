@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 
 volumes:
   data:
@@ -50,6 +50,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-curator-${ELASTIC_PORT}
     depends_on: ["elasticsearch"]
     env_file: .env
+    stop_signal: SIGUSR1
     volumes:
         - "./.env-files:/.env-files"
         - ./backup:/mount/backups/my_backup
