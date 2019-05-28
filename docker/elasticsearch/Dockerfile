@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch-oss:7.0.0
+FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.2
 
 COPY elasticsearch/elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 RUN chown root:elasticsearch /usr/share/elasticsearch/config/elasticsearch.yml
