@@ -11,6 +11,20 @@ CISCO_REASON Duplicate TCP SYN|Failed to locate egress interface|Invalid transpo
 CISCO_DIRECTION Inbound|inbound|Outbound|outbound
 CISCO_INTERVAL first hit|%{INT}-second interval
 CISCO_XLATE_TYPE static|dynamic
+
+# ASA-5-111010
+CISCOFW111010 User '%{DATA:user}', running '%{WORD:service}' from IP %{IPORHOST:src_ip}, executed '%{GREEDYDATA:cmd}'
+# ASA-5-111008
+CISCOFW111008 User '%{DATA:user}' executed the '%{GREEDYDATA:cmd}' command\.
+# ASA-7-111009
+CISCOFW111009 User '%{DATA:user}' executed cmd: %{GREEDYDATA:cmd}
+# ASA-6-113004
+CISCOFW113004 AAA user authentication Successful : server = \s*%{IPORHOST:server} : user = %{DATA:user}
+# ASA-6-113005
+CISCOFW113005 AAA user authentication %{CISCO_ASA_ACTION:action} : reason = %{CISCO_ASA_REASON} : server = %{IPORHOST:server} : user = %{DATA:user} : user IP = %{IP:src_ip}
+# ASA-7-111009
+CISCOFW111009 User '%{DATA:user}' executed cmd: %{GREEDYDATA:cmd}
+
 # ASA-2-106001
 CISCOFW106001 %{CISCO_DIRECTION:direction} %{WORD:protocol} connection %{CISCO_ACTION:action} from %{IP:src_ip}/%{INT:src_port} to %{IP:dst_ip}/%{INT:dst_port} flags %{GREEDYDATA:tcp_flags} on interface %{GREEDYDATA:interface}
 # ASA-2-106006, ASA-2-106007, ASA-2-106010
