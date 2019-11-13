@@ -32,6 +32,7 @@ services:
     command: -f /etc/logstash/conf.d/
     volumes:
       - "./.env-files:/.env-files"
+      - ./output:/usr/share/logstash/output/
     restart: always
     ports:
       - "${SWITCH_PORT}:5140/udp"
@@ -54,6 +55,7 @@ services:
     volumes:
         - "./.env-files:/.env-files"
         - ./backup:/mount/backups/my_backup
+        - ./output:/usr/share/logstash/output/
     restart: on-failure
     command: curator
 

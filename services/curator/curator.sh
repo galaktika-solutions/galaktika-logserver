@@ -11,3 +11,5 @@ touch "/mount/backups/my_backup/last_backup/last-backup-$(date -u +"%Y-%m-%d-%H-
 find /mount/backups/my_backup/ -type d -exec chmod 700 {} +
 find /mount/backups/my_backup/ -type f -exec chmod 600 {} +
 chown -R "$BACKUP_UID:$BACKUP_UID" /mount/backups/my_backup/
+
+find ./output -mtime +${DEBUG_RETENTION_DAYS:-1000} -delete
