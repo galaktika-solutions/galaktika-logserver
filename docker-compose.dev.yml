@@ -17,6 +17,7 @@ services:
       dockerfile: logstash/Dockerfile
     volumes:
       - ./docker/logstash/config:/etc/logstash/conf.d
+      - ./docker/logstash/patterns:/usr/share/logstash/pipeline/patterns
 
   kibana:
     build:

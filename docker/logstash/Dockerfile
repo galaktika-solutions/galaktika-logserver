@@ -5,5 +5,5 @@ RUN logstash-plugin install logstash-input-tcp
 RUN logstash-plugin install logstash-output-file
 
 COPY logstash/config/logstash.conf /etc/logstash/conf.d/logstash.conf
-# COPY logstash/patterns /usr/share/logstash/pipeline/patterns
+COPY logstash/patterns /usr/share/logstash/pipeline/patterns
 USER root
