@@ -4,7 +4,7 @@ set -e
 . /utils.sh
 
 site="elasticsearch:9200/_snapshot/my_backup";
-function response() {
+response() {
   response=$(curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X PUT $site -d \
   '{
     "type": "fs",
@@ -21,7 +21,9 @@ function response() {
     echo $response
     echo 'Elasticsearch connected'
   fi
-}
+  }
+
+
 
 if [ "$1" == 'manual_backup' ]; then
   response

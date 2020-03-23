@@ -25,7 +25,6 @@ RUN pip3 install --no-cache-dir periodtask==0.7.0
 RUN pip3 install --no-cache-dir elasticsearch-curator==5.8.1
 RUN pip3 install --no-cache-dir gdockutils==0.5.16
 
-
 COPY conf /conf
 COPY conf/stunnel.conf /etc/stunnel/stunnel.conf
 COPY docker/main/entrypoint.sh /entrypoint.sh
