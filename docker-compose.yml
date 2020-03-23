@@ -1,71 +1,64 @@
-version: '3.7'
+version: "3.7"
 
 volumes:
   data:
-    name: ${ELASTIC_PORT}
 
 networks:
   default:
     ipam:
       driver: default
       config:
-        - subnet: ${NETWORK_RANGE}
-
+        - subnet: 10.5.9.0/24
 
 services:
   elasticsearch:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-elasticsearch:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch-${ELASTIC_PORT}
+    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-elasticsearch:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
     volumes:
       - data:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
     environment:
       - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
-    restart: always
     ports:
-      - "127.0.0.1:${ELASTIC_PORT}:9200"
+      - "127.0.0.1:9200:9200"
 
   logstash:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-logstash:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-logstash-${ELASTIC_PORT}
+    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-logstash:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-logstash
     depends_on: ["elasticsearch"]
     command: -f /etc/logstash/conf.d/
     volumes:
       - "./.env-files:/.env-files"
       - ./output:/usr/share/logstash/output/
-    restart: always
     ports:
-      - "${SWITCH_PORT}:5140/udp"
-      - "${QS_FIREWALL_PORT}:1026"
-      - "${VERTIS_FIREWALL_PORT}:1025"
+      - "514:5140/udp"
+      - "1026:1026"
+      - "1025:1025"
 
   kibana:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-kibana:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-kibana-${ELASTIC_PORT}
-    restart: always
+    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-kibana:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-kibana
     ports:
-      - "127.0.0.1:${KIBANA_PORT}:5601"
+      - "127.0.0.1:5601:5601"
 
   curator:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-main:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-curator-${ELASTIC_PORT}
+    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-main:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-curator
     depends_on: ["elasticsearch"]
     env_file: .env
     stop_signal: SIGUSR1
     volumes:
-        - "./.env-files:/.env-files"
-        - ./backup:/mount/backups/my_backup
-        - ./output:/usr/share/logstash/output/
-    restart: on-failure
+      - "./.env-files:/.env-files"
+      - ./backup:/mount/backups/my_backup
+      - ./output:/usr/share/logstash/output/
     command: curator
 
   stunnel:
-    image: ${REGISTRY_URL}/${REGISTRY_NAME}-main:${REGISTRY_TAG}
-    container_name: ${COMPOSE_PROJECT_NAME}-stunnel-${ELASTIC_PORT}
+    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-main:${VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-stunnel
     env_file: .env
     volumes:
       - ./.env-files/:/.env-files
-    restart: always
     command: stunnel
     ports:
-      - "${STUNNEL_PORT}:9200"
+      - "9201:9200"

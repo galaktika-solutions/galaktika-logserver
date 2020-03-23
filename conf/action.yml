@@ -9,14 +9,14 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^winlogbeat-'
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 40
+      - filtertype: pattern
+        kind: prefix
+        value: "^winlogbeat-"
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: ${BACKUP_RETENTION_DAYS}
 
   2:
     action: delete_indices
@@ -28,14 +28,14 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^filebeat-'
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 40
+      - filtertype: pattern
+        kind: prefix
+        value: "^filebeat-"
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: ${BACKUP_RETENTION_DAYS}
   3:
     action: delete_indices
     description: >-
@@ -46,14 +46,14 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^logstash-'
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 40
+      - filtertype: pattern
+        kind: prefix
+        value: "^logstash-"
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: ${BACKUP_RETENTION_DAYS}
   4:
     action: delete_indices
     description: >-
@@ -64,14 +64,14 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^auditbeat-'
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 40
+      - filtertype: pattern
+        kind: prefix
+        value: "^auditbeat-"
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: ${BACKUP_RETENTION_DAYS}
   5:
     action: snapshot
     description: >-
@@ -79,24 +79,24 @@ actions:
       pattern in 'name'.  Use all other options as assigned
     options:
       repository: my_backup
-      name: 'curator-%Y-%m-%d-%H-%M-%S'
+      name: "curator-%Y-%m-%d-%H-%M-%S"
       ignore_unavailable: True
       wait_for_completion: True
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^filebeat-|^winlogbeat-|^logstash-|^auditbeat-|.kibana'
-    - filtertype: pattern
-      kind: prefix
-      value: metric-
-      exclude: True
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 0
+      - filtertype: pattern
+        kind: prefix
+        value: "^filebeat-|^winlogbeat-|^logstash-|^auditbeat-|.kibana"
+      - filtertype: pattern
+        kind: prefix
+        value: metric-
+        exclude: True
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: 0
   6:
     action: delete_snapshots
     description: >-
@@ -107,12 +107,12 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: '^curator-'
-      exclude:
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: 40
+      - filtertype: pattern
+        kind: prefix
+        value: "^curator-"
+        exclude:
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: ${BACKUP_RETENTION_DAYS}

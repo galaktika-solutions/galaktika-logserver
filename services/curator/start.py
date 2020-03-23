@@ -35,7 +35,7 @@ tasks = TaskList(
         ),
         mail_skipped=send,
         mail_failure=send,
-        run_on_start=False,
+        run_on_start=os.environ.get('DEBUG') == 'True',
         wait_timeout=5,
         send_mail_func=send,
         stop_signal=signal.SIGTERM,

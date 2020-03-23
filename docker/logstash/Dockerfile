@@ -1,4 +1,4 @@
-FROM docker.elastic.co/logstash/logstash-oss:6.4.2
+FROM docker.elastic.co/logstash/logstash-oss:7.6.1
 # Add your logstash plugins setup here
 RUN logstash-plugin install logstash-input-udp
 RUN logstash-plugin install logstash-input-tcp
