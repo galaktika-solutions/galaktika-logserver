@@ -19,6 +19,11 @@ services:
       - ./backup:/mount/backups/my_backup
     environment:
       - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     ports:
       - "127.0.0.1:9200:9200"
 
