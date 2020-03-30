@@ -1,7 +1,7 @@
 version: "3.7"
 
 volumes:
-  data:
+  "9200":
 
 networks:
   default:
@@ -15,7 +15,7 @@ services:
     image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-elasticsearch:${VERSION}
     container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
     volumes:
-      - data:/usr/share/elasticsearch/data
+      - 9200:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
     environment:
       - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
