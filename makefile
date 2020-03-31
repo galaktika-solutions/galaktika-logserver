@@ -23,8 +23,8 @@ push: reset = $(shell tput sgr0)
 
 push:
 	git pull
-	REGISTRY_TAG=${timestamp} docker-compose -f docker-compose.yml -f docker-compose.dev.yml build;
-	REGISTRY_TAG=${timestamp} docker-compose push
+	VERSION=${timestamp} docker-compose -f docker-compose.yml -f docker-compose.dev.yml build;
+	VERSION=${timestamp} docker-compose push
 	git tag --create $(timestamp)
 	git push origin --tags
 	@echo '$(bold)${timestamp}$(reset)'
