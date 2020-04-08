@@ -2,6 +2,7 @@ version: "3.7"
 
 volumes:
   "9200":
+    name: "9200"
 
 networks:
   default:
@@ -12,8 +13,8 @@ networks:
 
 services:
   elasticsearch:
-    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-elasticsearch:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME}-elasticsearch
+    image: ${REGISTRY_URL}/vertis-logserver-elasticsearch:${VERSION}
+    container_name: vertis-logserver-elasticsearch
     volumes:
       - 9200:/usr/share/elasticsearch/data
       - ./backup:/mount/backups/my_backup
@@ -28,8 +29,8 @@ services:
       - "127.0.0.1:9200:9200"
 
   logstash:
-    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-logstash:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME}-logstash
+    image: ${REGISTRY_URL}/vertis-logserver-logstash:${VERSION}
+    container_name: vertis-logserver-logstash
     depends_on: ["elasticsearch"]
     command: -f /etc/logstash/conf.d/
     volumes:
@@ -41,14 +42,14 @@ services:
       - "1025:1025"
 
   kibana:
-    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-kibana:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME}-kibana
+    image: ${REGISTRY_URL}/vertis-logserver-kibana:${VERSION}
+    container_name: vertis-logserver-kibana
     ports:
       - "127.0.0.1:5601:5601"
 
   curator:
-    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-main:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME}-curator
+    image: ${REGISTRY_URL}/vertis-logserver-main:${VERSION}
+    container_name: vertis-logserver-curator
     depends_on: ["elasticsearch"]
     env_file: .env
     stop_signal: SIGUSR1
@@ -59,8 +60,8 @@ services:
     command: curator
 
   stunnel:
-    image: ${REGISTRY_URL}/${COMPOSE_PROJECT_NAME}-main:${VERSION}
-    container_name: ${COMPOSE_PROJECT_NAME}-stunnel
+    image: ${REGISTRY_URL}/vertis-logserver-main:${VERSION}
+    container_name: vertis-logserver-stunnel
     env_file: .env
     volumes:
       - ./.env-files/:/.env-files
