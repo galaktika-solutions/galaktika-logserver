@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   elasticsearch:
@@ -9,7 +9,6 @@ services:
       - "ES_JAVA_OPTS=-Xms1G -Xmx1G"
     volumes:
       - "./docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
-
 
   logstash:
     build:
@@ -24,17 +23,17 @@ services:
       context: ./docker
       dockerfile: kibana/Dockerfile
     volumes:
-        - ./docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
 
   curator:
     build:
       context: .
       dockerfile: docker/main/Dockerfile
     volumes:
-        - ./services:/services
-        - ./docker/main/entrypoint.sh:/entrypoint.sh
-        - ./conf:/conf
-        - ./docker/utils.sh:/utils.sh
+      - ./services:/services
+      - ./docker/main/entrypoint.sh:/entrypoint.sh
+      - ./conf:/conf
+      - ./docker/utils.sh:/utils.sh
 
   stunnel:
     volumes:

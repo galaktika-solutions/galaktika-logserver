@@ -20,6 +20,12 @@ DEBUG_FILES_BACKUP_RETENTION_DAYS= 3
 
 CURATOR_SERVICE=True
 CURATOR_CRON=0 55 17 * * * Europe/Budapest
+
+GF_SMTP_ENABLED=true
+GF_SMTP_HOST=mail.vertis.com:25
+GF_SMTP_FROM_ADDRESS=grafana@vertis.com
+GF_SMTP_SKIP_VERIFY=true
+GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
 ```
 
 DEV mode you could create a developer certificate and ca

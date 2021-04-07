@@ -3,6 +3,8 @@ version: "3.7"
 volumes:
   "9200":
     name: "9200"
+  "grafana":
+    name: "grafana"
 
 networks:
   default:
@@ -46,6 +48,14 @@ services:
     container_name: vertis-logserver-kibana
     ports:
       - "127.0.0.1:5601:5601"
+
+  grafana:
+    image: grafana/grafana:7.5.2
+    env_file: .env
+    volumes:
+      - grafana:/var/lib/grafana
+    ports:
+      - 3000:3000
 
   curator:
     image: ${REGISTRY_URL}/vertis-logserver-main:${VERSION}
