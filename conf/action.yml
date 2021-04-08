@@ -89,7 +89,7 @@ actions:
         source: creation_date
         direction: older
         unit: days
-        unit_count: ${METRICBEAT_BACKUP_RETENTION_DAYS}
+        unit_count: ${METRICBEAT_BACKUP_RETENTION_DAYS:3}
   6:
     action: snapshot
     description: >-
