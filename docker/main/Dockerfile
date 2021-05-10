@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210217
+FROM ubuntu:focal-20210416
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -13,8 +13,8 @@ ENV PATH /python/bin:$PATH
 ENV PYTHONUNBUFFERED 1
 
 RUN python -m pip install -U pip
-RUN pip3 install --no-cache-dir periodtask==0.7.0
-RUN pip3 install --no-cache-dir elasticsearch-curator==5.8.3
+RUN pip3 install --no-cache-dir vertis-periodtask==0.8.0
+RUN pip3 install --no-cache-dir elasticsearch-curator==5.8.4
 RUN pip3 install --no-cache-dir gdockutils==0.5.16
 
 COPY conf /conf
